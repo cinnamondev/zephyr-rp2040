@@ -1,0 +1,47 @@
+#include <zephyr/dt-bindings/display/ili9xxx.h>
+#include <dt-bindings/pinctrl/rpi-pico-rp2040-pinctrl.h>
+
+/ {
+    chosen {
+        zephyr,display = &ili9488;
+    };
+    ili_module_mipi_dbi: ili_module_mipi_dbi {
+        compatible = "zephyr,mipi-dbi-spi";
+        spi-dev = <&spi1>;
+        dc-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+        write-only;
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+		ili9488: ili9488@0 {
+			compatible = "ilitek,ili9488";
+			mipi-max-frequency = <DT_FREQ_M(1)>;
+            mipi-mode = <2>;
+			reg = <0>;
+			rotation = <270>;
+			width = <320>;
+			height = <480>;
+		};
+    };
+};
+
+&pinctrl {
+    spi1_default: spi1_default {
+        group1 {
+            pinmux = <SPI1_CSN_P13>,<SPI1_SCK_P14>,<SPI1_TX_P15>;
+        };
+        group2 {
+            pinmux = <SPI1_RX_P12>;
+            input-enable;
+        };
+    };
+};
+
+&spi1 {
+    status = "okay";
+    pinctrl-0 = < &spi1_default >;
+    pinctrl-names = "default";
+    clock-frequency = <DT_FREQ_M(1)>;
+    cs-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+};
+

@@ -1,42 +1,43 @@
 /*
- * Copyright (c) 2016 Intel Corporation
+ * Copyright (c) 2018 Jan Van Winkel <jan.van_winkel@dxplore.eu>
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <stdio.h>
-#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/display.h>
 #include <zephyr/drivers/gpio.h>
+#include <lvgl.h>
+#include <stdio.h>
+#include <string.h>
+#include <zephyr/kernel.h>
+#include <float.h>
 
-/* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS   1000
+#include <zephyr/logging/log.h>
+LOG_MODULE_REGISTER(app);
 
-/* The devicetree node identifier for the "led0" alias. */
-#define LED0_NODE DT_ALIAS(led0)
 
-/*
- * A build error on this line means your board is unsupported.
- * See the sample documentation for information on how to fix this.
- */
-static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 
-int main(void)
-{
-	int ret;
-	bool led_state = true;
-
-	if (!gpio_is_ready_dt(&led)) { return 0; }
-    if ((ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE)) < 0) { return 0; }
+int main(void) {
+	const struct device *display_dev;
+	lv_obj_t *hello_world_label;
+	display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
+	if (!device_is_ready(display_dev)) {
+		LOG_ERR("Device not ready, aborting test");
+		return 0;
+	}
+	
+	hello_world_label = lv_label_create(lv_scr_act());
+	lv_label_set_text(hello_world_label, "Hello world!");
+	lv_obj_align(hello_world_label, LV_ALIGN_CENTER, 0, 0);
+	
+	lv_task_handler();
+	display_blanking_off(display_dev);
 
 	while (1) {
-		ret = gpio_pin_toggle_dt(&led);
-		if (ret < 0) {
-			return 0;
-		}
-
-		led_state = !led_state;
-		printf("LED state: %s\n", led_state ? "ON" : "OFF");
-		k_msleep(SLEEP_TIME_MS);
+		printf("hiii");
+		lv_task_handler();
+		k_sleep(K_MSEC(1000));
 	}
-	return 0;
 }
