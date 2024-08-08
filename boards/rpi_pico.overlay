@@ -17,10 +17,15 @@
 			compatible = "ilitek,ili9488";
 			mipi-max-frequency = <DT_FREQ_M(1)>;
             mipi-mode = <2>;
+            mipi-cpha;
+            mipi-cpol;
+            mipi-hold-cs;
+            pixel-format = <ILI9XXX_PIXEL_FORMAT_RGB888>;
 			reg = <0>;
-			rotation = <270>;
+			rotation = <180>;
 			width = <320>;
 			height = <480>;
+
 		};
     };
 };
