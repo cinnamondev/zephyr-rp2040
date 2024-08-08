@@ -13,10 +13,9 @@
 #include <string.h>
 #include <zephyr/kernel.h>
 #include <lvgl_input_device.h>
-
+#include <lv_demos.h>
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
-
 
 
 int main(void)
@@ -29,11 +28,10 @@ int main(void)
 		LOG_ERR("Device not ready, aborting test");
 		return 0;
 	}
-	hello_world_label = lv_label_create(lv_scr_act());
-	
-	lv_label_set_text(hello_world_label, "Hello world!");
-	lv_obj_align(hello_world_label, LV_ALIGN_CENTER, 0, 0);
-
+	//hello_world_label = lv_label_create(lv_scr_act());
+	//lv_label_set_text(hello_world_label, "Hello world!");
+	//lv_obj_align(hello_world_label, LV_ALIGN_CENTER, 0, 0);
+	lv_demo_music();
 	lv_task_handler();
 	display_blanking_off(display_dev);
 

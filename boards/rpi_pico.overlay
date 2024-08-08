@@ -1,5 +1,6 @@
 #include <zephyr/dt-bindings/display/ili9xxx.h>
 #include <dt-bindings/pinctrl/rpi-pico-rp2040-pinctrl.h>
+#include <zephyr/dt-bindings/lvgl/lvgl.h>
 
 / {
     chosen {
@@ -28,6 +29,10 @@
 
 		};
     };
+    pointer {
+        compatible = "zephyr,lvgl-pointer-input";
+        input = <&ft5336>;
+    };
 };
 
 &pinctrl {
@@ -42,6 +47,14 @@
     };
 };
 
+&i2c1_default {
+    group1 {
+        pinmux = <I2C1_SDA_P10>,<I2C1_SCL_P11>;
+        input-enable;
+        input-schmitt-enable;
+    };  
+};
+
 &spi1 {
     status = "okay";
     pinctrl-0 = < &spi1_default >;
@@ -50,3 +63,11 @@
     cs-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
 };
 
+&i2c1 {
+    status = "okay";
+    ft5336: ft5336@38 {
+        compatible = "focaltech,ft5336";
+        reg = <0x38>;
+        int-gpios = <&gpio0 8 GPIO_ACTIVE_LOW>;
+    };
+};
