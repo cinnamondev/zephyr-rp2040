@@ -1,3 +1,5 @@
 # zephyr-rp2040
 
-Freestanding RP2040/Pi Pico demo ILI9341
+Zephyr Testing Repository / Template RP2040 Target. native_posix target lvgl
+
+configure display driver ili9488
