@@ -1,6 +1,7 @@
 #include <zephyr/dt-bindings/display/ili9xxx.h>
 #include <dt-bindings/pinctrl/rpi-pico-rp2040-pinctrl.h>
 #include <zephyr/dt-bindings/lvgl/lvgl.h>
+#include <zephyr/dt-bindings/dma/rpi_pico_dma.h>
 
 / {
     chosen {
@@ -16,7 +17,7 @@
 
 		ili9488: ili9488@0 {
 			compatible = "ilitek,ili9488";
-			mipi-max-frequency = <DT_FREQ_M(1)>;
+			mipi-max-frequency = <DT_FREQ_M(62)>;
             mipi-mode = <2>;
             mipi-cpha;
             mipi-cpol;
@@ -32,7 +33,9 @@
     pointer {
         compatible = "zephyr,lvgl-pointer-input";
         input = <&ft5336>;
+        swap-xy;
     };
+
 };
 
 &pinctrl {
@@ -59,7 +62,9 @@
     status = "okay";
     pinctrl-0 = < &spi1_default >;
     pinctrl-names = "default";
-    clock-frequency = <DT_FREQ_M(1)>;
+    dmas = <&dma 0 RPI_PICO_DMA_SLOT_SPI1_TX 0>, <&dma 1 RPI_PICO_DMA_SLOT_SPI1_RX 0>;
+    dma-names = "tx", "rx";
+    clock-frequency = <DT_FREQ_M(62)>;
     cs-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
 };
 
